@@ -1,5 +1,6 @@
 const { google } = require('googleapis');
 const key = require('./keys.json');
+const { ids } = require('googleapis/build/src/apis/ids');
 
 const calendar = google.calendar({ version: 'v3', auth: new google.auth.JWT(
     key.client_email,
@@ -18,9 +19,6 @@ let endDate = new Date();
 
 startDate.setDate(startDate.getDate() - daysBefore);
 endDate.setDate(endDate.getDate() + daysAfter);
-
-
-
 
 startDate = startDate.toISOString().substring(0,19) + "Z";
 endDate = endDate.toISOString().substring(0,19) + "Z";
@@ -52,6 +50,7 @@ function getNewData() {
                     }
                 );
                 let data = await response.json();
+                console.log(data.schedule.map((d) => [d["start"], d["end"]]));
 
                 resolve(data.schedule.map((d) => [d["start"], d["end"]]));
         } catch (error) {
@@ -61,7 +60,6 @@ function getNewData() {
 }
 
 
-getNewData();
 
 
 function getOldData() {
@@ -73,8 +71,12 @@ function getOldData() {
                 singleEvents: true,
                 timeMin: startDate,
             });
-            
-            resolve(data.items.map((d) => [d["start"], d["end"]]));
+
+            timesList = data.items.map((d) => [d["start"]["dateTime"].substring(0,19), d["end"]["dateTime"].substring(0,19)]);
+            idList = data.items.map((d) => d["id"]);
+            dataList = [timesList, idList];
+
+            resolve(dataList);
 
         } catch (error) {
             reject(error);
@@ -83,5 +85,38 @@ function getOldData() {
 }
 
 
-getOldData();
+function addEvent(times) {
+    const event = {
+        summary: 'Public Skate',
+        start: {
+            dateTime: times[0],
+            //timeZone: 'America/New_York'
+        },
+        end: {
+            dateTime: times[1],
+            //timeZone: 'America/New_York'
+        },
+        //description: `Created on ${new Date().toLocaleString()}`
+    }
+
+    return new Promise((resolve, reject) => {
+        try {
+            calendar.events.insert({
+                calendarId: key.calendarId,
+                resource:event
+            }, (err) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve();
+                }
+            });
+        } catch (error) {
+            reject(error);
+        }
+    });
+}
+
+
 getNewData();
+getOldData();
