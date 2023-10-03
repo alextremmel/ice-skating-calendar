@@ -51,15 +51,9 @@ function getNewData() {
                         method: "POST",
                     }
                 );
-                let newData = await response.json();
-                newData = newData.schedule;
-                newData = newData.map((event) => [
-                    event.start,
-                    event.end
-                ]);
-                console.log(newData);
-                
-                resolve(newData.map((d) => [d["start"], d["end"]]));
+                let data = await response.json();
+
+                resolve(data.schedule.map((d) => [d["start"], d["end"]]));
         } catch (error) {
             reject(error);
         }
@@ -75,22 +69,12 @@ function getOldData() {
         try {
 
             const { data } = await calendar.events.list({
-                calendarId: calendarId,
+                calendarId: key.calendarId,
                 singleEvents: true,
                 timeMin: startDate,
             });
             
-            const oldData = [];
-            data.items.forEach((e) => { // e is event
-                const start = e.start.dateTime.slice(0,-6); // slice is to get '-04:00' out of the string
-                const end = e.end.dateTime.slice(0,-6); // it was there because of time zone
-                const id = e.id;
-                oldData.push([start, end, id]);
-            });
-
-            console.log(oldData.length + " old \n");
-
-            resolve(oldData);
+            resolve(data.items.map((d) => [d["start"], d["end"]]));
 
         } catch (error) {
             reject(error);
@@ -99,3 +83,5 @@ function getOldData() {
 }
 
 
+getOldData();
+getNewData();
