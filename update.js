@@ -50,7 +50,6 @@ function getNewData() {
                     }
                 );
                 let data = await response.json();
-                console.log(data.schedule.map((d) => [d["start"], d["end"]]));
 
                 resolve(data.schedule.map((d) => [d["start"], d["end"]]));
         } catch (error) {
@@ -117,6 +116,40 @@ function addEvent(times) {
     });
 }
 
+function deleteEvent(id) {
+    return new Promise((resolve, reject) => {
+        try {
+            calendar.events.delete(
+                {
+                    calendarId:key.calendarId,
+                    eventId:id
+                },
+                (err, res) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve();
+                    }
+                }
+            );  
+        } catch (error) {
+            reject(error);
+        }
+    });
+}
 
-getNewData();
-getOldData();
+
+
+
+async function main() {
+
+    const [newData, oldData] = await Promise.all([
+        getNewData(),
+        getOldData()
+    ]);
+
+    console.log(newData);
+    
+}
+
+main();
