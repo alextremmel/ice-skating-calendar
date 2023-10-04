@@ -112,7 +112,7 @@ function addEvent(times) {
     });
 }
 
-function deleteEvent(id) {
+function deleteEvent (id) {
     return new Promise((resolve, reject) => {
         try {
             calendar.events.delete(
@@ -135,41 +135,18 @@ function deleteEvent(id) {
 }
 
 function updateCalendar(newData, oldData) {
+
     return new Promise(async (resolve, reject) => {
         try {
-            /*
-            for (let i = 0; i < oldData.length; i++) {
-                if (!newData.some(item => item[0] === oldData[i][0] && item[1] === oldData[i][1])) {
-                    await deleteEvent(oldData[1][i]);
-                }
-            }
             
+            for (let i = 0; i < oldData[0].length; i++) {
+                
+ 
+            }
             for (let i = 0; i < newData.length; i++) {
-                if (!oldData.map(s => [s[0], s[1]]).some(item => item[0] === newData[i][0] && item[1] === newData[i][1])) {
-                    await addEvent(newData[i]);
-                }
-            }
-            */
-
-            for (let i = 0; i < oldData.length; i++) {
-
-            }
-            
-            
-
-            /*
-            for (let i = 0; i < newData.length; i++) {
-                console.log(oldData[0].indexOf(newData[i])); // -1 if oldData does not contain newData[i]
-                let index = oldData[0].indexOf(newData[i]);
-
-                if (index == -1) {
-                    //await addEvent(newData[i]);
-                } else {
-                    //await deleteEvent(oldData[1][index])
-                }
                 
             }
-            */
+            
             
 
             
@@ -189,8 +166,8 @@ async function main() {
         getOldData()
     ]);
 
-    console.log(oldData);
-    console.log(newData);
+    //console.log(oldData);
+    //console.log(newData);
     await updateCalendar(newData, oldData);
 
     
