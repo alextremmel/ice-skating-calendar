@@ -12,7 +12,7 @@ const calendar = google.calendar({ version: 'v3', auth: new google.auth.JWT(
 
 
 const daysBefore = 2;
-const daysAfter = 2;
+const daysAfter = 6;
 
 let startDate = new Date();
 let endDate = new Date();
@@ -143,10 +143,13 @@ function updateCalendar(newData, oldData) {
 
     return new Promise(async (resolve, reject) => {
         try {
-
+            
+            console.log(newData);
             for (let i = 0; i < oldData[0].length; i++) {
+                console.log(oldData[0][i][0], oldData[0][i][1]);
                 if (!newData.some(sublist => sublist[0] === oldData[0][i][0] && sublist[1] === oldData[0][i][1])) {
                     await deleteEvent(oldData[1][i]);
+                    console.log("-----------------");
                 }
             }
 
