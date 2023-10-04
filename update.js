@@ -146,10 +146,7 @@ function updateCalendar(newData, oldData) {
             for (let i = 0; i < newData.length; i++) {
                 
             }
-            
-            
 
-            
             
 
             resolve();
