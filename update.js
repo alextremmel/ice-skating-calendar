@@ -20,6 +20,10 @@ let endDate = new Date();
 startDate.setDate(startDate.getDate() - daysBefore);
 endDate.setDate(endDate.getDate() + daysAfter);
 
+// set time to 0, gets offset by timezone when toISOString()
+startDate.setHours(0);
+endDate.setHours(0);
+
 startDate = startDate.toISOString().substring(0,19) + "Z";
 endDate = endDate.toISOString().substring(0,19) + "Z";
 
@@ -71,6 +75,7 @@ function getOldData() {
             timesList = data.items.map((d) => [d["start"]["dateTime"].substring(0,19), d["end"]["dateTime"].substring(0,19)]);
             idList = data.items.map((d) => d["id"]);
             dataList = [timesList, idList];
+            
 
             resolve(dataList);
 
@@ -163,14 +168,14 @@ function updateCalendar(newData, oldData) {
 
 async function main() {
 
+
     const [newData, oldData] = await Promise.all([
         getNewData(),
         getOldData()
     ]);
 
-    //console.log(oldData);
-    //console.log(newData);
     await updateCalendar(newData, oldData);
+
 
     
 }
