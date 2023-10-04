@@ -11,8 +11,8 @@ const calendar = google.calendar({ version: 'v3', auth: new google.auth.JWT(
 
 
 
-const daysBefore = 2;
-const daysAfter = 6;
+const daysBefore = 10;
+const daysAfter = 10;
 
 let startDate = new Date();
 let endDate = new Date();
@@ -26,6 +26,8 @@ endDate.setHours(0);
 
 startDate = startDate.toISOString().substring(0,19) + "Z";
 endDate = endDate.toISOString().substring(0,19) + "Z";
+
+console.log(startDate, endDate);
 
 
 function getNewData() {
@@ -144,17 +146,18 @@ function updateCalendar(newData, oldData) {
     return new Promise(async (resolve, reject) => {
         try {
             
-            console.log(newData);
             for (let i = 0; i < oldData[0].length; i++) {
-                console.log(oldData[0][i][0], oldData[0][i][1]);
-                if (!newData.some(sublist => sublist[0] === oldData[0][i][0] && sublist[1] === oldData[0][i][1])) {
+                if (!newData.some(item => item[0] === oldData[0][i][0] && item[1] === oldData[0][i][1])) {
+                    
+                    console.log('delete');
                     await deleteEvent(oldData[1][i]);
-                    console.log("-----------------");
                 }
             }
-
+            
             for (let i = 0; i < newData.length; i++) {
-                if (!oldData[0].some(sublist => sublist[0] === newData[i][0] && sublist[1] === newData[i][1])) {
+                if (!oldData[0].map(s => [s[0], s[1]]).some(item => item[0] === newData[i][0] && item[1] === newData[i][1])) {
+                    
+                    console.log('add');
                     await addEvent(newData[i]);
                 }
             }
