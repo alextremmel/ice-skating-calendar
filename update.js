@@ -58,9 +58,6 @@ function getNewData() {
     });
 }
 
-
-
-
 function getOldData() {
     return new Promise(async (resolve, reject) => {
         try {
@@ -83,17 +80,16 @@ function getOldData() {
     });
 }
 
-
 function addEvent(times) {
     const event = {
         summary: 'Public Skate',
         start: {
             dateTime: times[0],
-            //timeZone: 'America/New_York'
+            timeZone: 'America/New_York'
         },
         end: {
             dateTime: times[1],
-            //timeZone: 'America/New_York'
+            timeZone: 'America/New_York'
         },
         //description: `Created on ${new Date().toLocaleString()}`
     }
@@ -138,8 +134,53 @@ function deleteEvent(id) {
     });
 }
 
+function updateCalendar(newData, oldData) {
+    return new Promise(async (resolve, reject) => {
+        try {
+            /*
+            for (let i = 0; i < oldData.length; i++) {
+                if (!newData.some(item => item[0] === oldData[i][0] && item[1] === oldData[i][1])) {
+                    await deleteEvent(oldData[1][i]);
+                }
+            }
+            
+            for (let i = 0; i < newData.length; i++) {
+                if (!oldData.map(s => [s[0], s[1]]).some(item => item[0] === newData[i][0] && item[1] === newData[i][1])) {
+                    await addEvent(newData[i]);
+                }
+            }
+            */
 
+            for (let i = 0; i < oldData.length; i++) {
 
+            }
+            
+            
+
+            /*
+            for (let i = 0; i < newData.length; i++) {
+                console.log(oldData[0].indexOf(newData[i])); // -1 if oldData does not contain newData[i]
+                let index = oldData[0].indexOf(newData[i]);
+
+                if (index == -1) {
+                    //await addEvent(newData[i]);
+                } else {
+                    //await deleteEvent(oldData[1][index])
+                }
+                
+            }
+            */
+            
+
+            
+
+            resolve();
+
+        } catch (error) {
+            reject(error);
+        }
+    });  
+}
 
 async function main() {
 
@@ -148,7 +189,10 @@ async function main() {
         getOldData()
     ]);
 
+    console.log(oldData);
     console.log(newData);
+    await updateCalendar(newData, oldData);
+
     
 }
 
