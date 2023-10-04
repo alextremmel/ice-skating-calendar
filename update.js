@@ -27,10 +27,8 @@ endDate.setHours(0);
 startDate = startDate.toISOString().substring(0,19) + "Z";
 endDate = endDate.toISOString().substring(0,19) + "Z";
 
-console.log(startDate, endDate);
 
-
-function getNewData() {
+function getNewData () {
     return new Promise(async (resolve, reject) => {
         try {
             const response = await fetch(
@@ -64,7 +62,7 @@ function getNewData() {
     });
 }
 
-function getOldData() {
+function getOldData () {
     return new Promise(async (resolve, reject) => {
         try {
 
@@ -87,7 +85,7 @@ function getOldData() {
     });
 }
 
-function addEvent(times) {
+function addEvent (times) {
     const event = {
         summary: 'Public Skate',
         start: {
@@ -141,28 +139,22 @@ function deleteEvent (id) {
     });
 }
 
-function updateCalendar(newData, oldData) {
+function updateCalendar (newData, oldData) {
 
     return new Promise(async (resolve, reject) => {
         try {
             
             for (let i = 0; i < oldData[0].length; i++) {
                 if (!newData.some(item => item[0] === oldData[0][i][0] && item[1] === oldData[0][i][1])) {
-                    
-                    console.log('delete');
                     await deleteEvent(oldData[1][i]);
                 }
             }
             
             for (let i = 0; i < newData.length; i++) {
                 if (!oldData[0].map(s => [s[0], s[1]]).some(item => item[0] === newData[i][0] && item[1] === newData[i][1])) {
-                    
-                    console.log('add');
                     await addEvent(newData[i]);
                 }
             }
-
-            
 
             resolve();
 
@@ -172,8 +164,7 @@ function updateCalendar(newData, oldData) {
     });  
 }
 
-async function main() {
-
+async function main () {
 
     const [newData, oldData] = await Promise.all([
         getNewData(),
@@ -182,8 +173,6 @@ async function main() {
 
     await updateCalendar(newData, oldData);
 
-
-    
 }
 
 main();
