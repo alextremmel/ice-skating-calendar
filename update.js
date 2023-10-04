@@ -7,12 +7,12 @@ const calendar = google.calendar({ version: 'v3', auth: new google.auth.JWT(
     null,
     key.private_key,
     ['https://www.googleapis.com/auth/calendar']
-  )});
+)});
 
 
 
-const daysBefore = 1;
-const daysAfter = 1;
+const daysBefore = 2;
+const daysAfter = 2;
 
 let startDate = new Date();
 let endDate = new Date();
@@ -138,13 +138,17 @@ function updateCalendar(newData, oldData) {
 
     return new Promise(async (resolve, reject) => {
         try {
-            
+
             for (let i = 0; i < oldData[0].length; i++) {
-                
- 
+                if (!newData.some(sublist => sublist[0] === oldData[0][i][0] && sublist[1] === oldData[0][i][1])) {
+                    await deleteEvent(oldData[1][i]);
+                }
             }
+
             for (let i = 0; i < newData.length; i++) {
-                
+                if (!oldData[0].some(sublist => sublist[0] === newData[i][0] && sublist[1] === newData[i][1])) {
+                    await addEvent(newData[i]);
+                }
             }
 
             
