@@ -11,7 +11,7 @@ const calendar = google.calendar({ version: 'v3', auth: new google.auth.JWT(
 
 
 
-const daysBefore = 10;
+const daysBefore = 3;
 const daysAfter = 10;
 
 let startDate = new Date();
@@ -96,7 +96,7 @@ function addEvent (times) {
             dateTime: times[1],
             timeZone: 'America/New_York'
         },
-        //description: `Created on ${new Date().toLocaleString()}`
+        description: `Public skate times are subject to change. This event was last updated ${new Date().toLocaleString()}`
     }
 
     return new Promise((resolve, reject) => {
@@ -165,6 +165,7 @@ function updateCalendar (newData, oldData) {
 }
 
 async function main () {
+
 
     const [newData, oldData] = await Promise.all([
         getNewData(),
