@@ -1,6 +1,5 @@
 const { google } = require('googleapis');
 const key = require('./keys.json');
-const { ids } = require('googleapis/build/src/apis/ids');
 
 const calendar = google.calendar({ version: 'v3', auth: new google.auth.JWT(
     key.client_email,
@@ -8,7 +7,6 @@ const calendar = google.calendar({ version: 'v3', auth: new google.auth.JWT(
     key.private_key,
     ['https://www.googleapis.com/auth/calendar']
 )});
-
 
 
 const daysBefore = 3;
