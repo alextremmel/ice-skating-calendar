@@ -2,7 +2,7 @@ name: run update.js
 
 on:
   schedule:
-    - cron: '0 6-18/2 * * *' # At 00:00 on Monday
+    - cron: '0 6,10,14 * * *'
 
     
 jobs:
