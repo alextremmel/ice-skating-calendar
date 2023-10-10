@@ -1,7 +1,11 @@
-const mySecretVariable = process.env.GITHUB_SECRET_MY_SECRET_VARIABLE;
+const calId = process.env.CAL_ID;
+const clientEmail = process.env.CL_EMAIL;
+const privateKey = process.env.PRIV_KEY;
 
-if (mySecretVariable) {
-  console.log(`My secret variable is: ${mySecretVariable}`);
+if (calId && clientEmail && privateKey) {
+  console.log(`Calendar ID: ${calId}`);
+  console.log(`Client Email: ${clientEmail}`);
+  console.log(`Private Key: ${privateKey}`);
 } else {
-  console.error('Secret variable not found.');
+  console.error('One or more secret variables not found.');
 }
