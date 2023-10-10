@@ -1,14 +1,8 @@
 name: run update.js
 
-#on:
-#  schedule:
-#    - cron: '0 6-18/2 * * *' # At 00:00 on Monday
-
 on:
-  push:
-    branches:
-      - main
-  workflow_dispatch: {}  # Add this section for manual triggering
+  schedule:
+    - cron: '0 6-18/2 * * *' # At 00:00 on Monday
 
     
 jobs:
