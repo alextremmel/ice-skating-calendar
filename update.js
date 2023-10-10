@@ -10,7 +10,7 @@ const calendar = google.calendar({ version: 'v3', auth: new google.auth.JWT(
 )});
 
 
-console.log(process.env.PRIV_KEY);
+
 
 
 
@@ -179,4 +179,4 @@ async function main () {
 
 }
 
-//main();
+main();
