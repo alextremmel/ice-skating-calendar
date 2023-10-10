@@ -12,7 +12,7 @@ const calendar = google.calendar({ version: 'v3', auth: new google.auth.JWT(
     ['https://www.googleapis.com/auth/calendar']
 )});
 
-console.log(CL_EMAIL);
+console.log(`CAL_ID: ${process.env.CAL_ID}`);
 
 
 const daysBefore = 3;
