@@ -10,6 +10,9 @@ const calendar = google.calendar({ version: 'v3', auth: new google.auth.JWT(
 )});
 
 
+console.log(process.env.PRIV_KEY);
+
+
 
 const daysBefore = 3;
 const daysAfter = 20;
@@ -176,4 +179,4 @@ async function main () {
 
 }
 
-main();
+//main();
