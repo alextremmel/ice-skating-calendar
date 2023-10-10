@@ -1,4 +1,5 @@
 const { google } = require('googleapis');
+const fetch = require('node-fetch');
 // const key = require('./keys.json');
 const CAL_ID = process.env.CAL_ID;
 const CL_EMAIL = process.env.CL_EMAIL;
