@@ -10,7 +10,7 @@ const calendar = google.calendar({ version: 'v3', auth: new google.auth.JWT(
 
 
 const daysBefore = 3;
-const daysAfter = 10;
+const daysAfter = 20;
 
 let startDate = new Date();
 let endDate = new Date();
