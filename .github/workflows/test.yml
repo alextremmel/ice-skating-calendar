@@ -32,7 +32,6 @@ jobs:
         
 
     - name: install dependencies
-      working-directory: ./ice-skating-calendar
       run: npm install
 
     - name: run script
