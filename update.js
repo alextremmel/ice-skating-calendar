@@ -11,7 +11,7 @@ const calendar = google.calendar({ version: 'v3', auth: new google.auth.JWT(
 
 
 const daysBefore = 3;
-const daysAfter = 5;
+const daysAfter = 15;
 
 let startDate = new Date();
 let endDate = new Date();
