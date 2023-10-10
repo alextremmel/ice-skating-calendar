@@ -1,18 +1,14 @@
 const { google } = require('googleapis');
 const fetch = require('node-fetch');
 // const key = require('./keys.json');
-const CAL_ID = process.env.CAL_ID;
-const CL_EMAIL = process.env.CL_EMAIL;
-const PRIV_KEY = process.env.PRIV_KEY;
 
 const calendar = google.calendar({ version: 'v3', auth: new google.auth.JWT(
-    CL_EMAIL,
+    process.env.CL_EMAIL,
     null,
-    PRIV_KEY,
+    process.env.PRIV_KEY,
     ['https://www.googleapis.com/auth/calendar']
 )});
 
-console.log(`CAL_ID: ${process.env.CAL_ID}`);
 
 
 const daysBefore = 3;
@@ -71,7 +67,7 @@ function getOldData () {
         try {
 
             const { data } = await calendar.events.list({
-                calendarId: CAL_ID,
+                calendarId: process.env.CAL_ID,
                 singleEvents: true,
                 timeMin: startDate,
             });
@@ -106,7 +102,7 @@ function addEvent (times) {
     return new Promise((resolve, reject) => {
         try {
             calendar.events.insert({
-                calendarId: CAL_ID,
+                calendarId: process.env.CAL_ID,
                 resource:event
             }, (err) => {
                 if (err) {
@@ -126,8 +122,8 @@ function deleteEvent (id) {
         try {
             calendar.events.delete(
                 {
-                    calendarId:CAL_ID,
-                    eventId:id
+                    calendarId: process.env.CAL_ID,
+                    eventId: id
                 },
                 (err, res) => {
                     if (err) {
