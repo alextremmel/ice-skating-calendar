@@ -5,7 +5,6 @@ const privateKey = process.env.PRIV_KEY;
 if (calId && clientEmail && privateKey) {
   console.log(`Calendar ID: ${calId}`);
   console.log(`Client Email: ${clientEmail}`);
-  console.log(`Private Key: ${privateKey}`);
 } else {
   console.error('One or more secret variables not found.');
 }

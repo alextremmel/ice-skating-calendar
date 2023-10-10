@@ -24,15 +24,12 @@ jobs:
       with:
         node-version: 16
         
-    - name: Set Environment Variables
-      run:
-          echo "CAL_ID=${{ secrets.CAL_ID }}" >> $GITHUB_ENV
-          echo "CL_EMAIL=${{ secrets.CL_EMAIL }}" >> $GITHUB_ENV
-          echo "PRIV_KEY=${{ secrets.PRIV_KEY }}" >> $GITHUB_ENV
-        
-
     - name: install dependencies
       run: npm install
 
     - name: run script
+      env: 
+        CAL_ID: ${{ secrets.CAL_ID }}
+        CL_EMAIL: ${{ secrets.CL_EMAIL }}
+        PRIV_KEY: ${{ secrets.PRIV_KEY }}
       run: node test.js
