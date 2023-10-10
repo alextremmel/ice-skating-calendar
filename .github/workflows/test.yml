@@ -1,0 +1,41 @@
+name: run test.js
+
+#on:
+#  schedule:
+#    - cron: '0 6-18/2 * * *' # At 00:00 on Monday
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch: {}  # Add this section for manual triggering
+
+    
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: load script
+      uses: actions/checkout@v2
+      with:
+        ref: main
+        path: test.js
+
+    - name: set up node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: 18
+        
+    - name: Set Environment Variables
+      run:
+          echo "CAL_ID=${{ secrets.CAL_ID }}" >> $GITHUB_ENV
+          echo "CL_EMAIL=${{ secrets.CL_EMAIL }}" >> $GITHUB_ENV
+          echo "PRIV_KEY=${{ secrets.PRIV_KEY }}" >> $GITHUB_ENV
+        
+
+    - name: install dependencies
+      run: npm install
+
+    - name: run script
+      run: node test.js
