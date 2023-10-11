@@ -6,7 +6,7 @@
     "author": "Alex Tremmel",
     "license": "MIT",
     "dependencies": {
-      "googleapis": "^126.0.1",
-      "node-fetch": "^2.6.1"
+      "googleapis": "^126.0.1"
+      
     }
   }

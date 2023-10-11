@@ -1,5 +1,5 @@
 const { google } = require('googleapis');
-const fetch = require('node-fetch');
+// const { fetch } = require('node-fetch');
 // const key = require('./keys.json');
 
 const calendar = google.calendar({ version: 'v3', auth: new google.auth.JWT(
@@ -25,6 +25,14 @@ endDate.setHours(0);
 
 startDate = startDate.toISOString().substring(0,19) + "Z";
 endDate = endDate.toISOString().substring(0,19) + "Z";
+
+function getDate( offset ) { // returns date string (offset) days before or after current date
+    let date = new Date();
+    date.setDate( date.getDate() + offset )
+    date.setHours( 0 );
+    date = date.toISOString().substring( 0, 19 ) + "Z";
+    return date;
+}
 
 
 function getNewData () {
