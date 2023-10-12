@@ -1,11 +1,12 @@
 const { google } = require('googleapis');
-// const { fetch } = require('node-fetch');
-// const key = require('./keys.json');
+//const fetch  = require('node-fetch'); // use this when running on github, package.json needs update
+
+const key = require('./keys.json');
 
 const calendar = google.calendar({ version: 'v3', auth: new google.auth.JWT(
-    process.env.CL_EMAIL,
+    key.client_email,
     null,
-    process.env.PRIV_KEY,
+    key.private_key,
     ['https://www.googleapis.com/auth/calendar']
 )});
 
@@ -185,4 +186,4 @@ async function main () {
 
 }
 
-//main();
+// main();
