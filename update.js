@@ -34,6 +34,8 @@ function getDate( offset ) { // returns date string (offset) days before or afte
     return date;
 }
 
+console.log(getDate(2));
+
 
 function getNewData () {
     return new Promise(async (resolve, reject) => {
@@ -183,4 +185,4 @@ async function main () {
 
 }
 
-main();
+//main();
