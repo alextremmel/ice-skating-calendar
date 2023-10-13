@@ -24,38 +24,75 @@ function getDate( offset ) { // returns date string (offset) days before or afte
 }
 
 function addEvent ( start, end ) {
+    const event = {
+        summary: 'Public Skate',
+        start: {
+            dateTime: start,
+            timeZone: 'America/New_York'
+        },
+        end: {
+            dateTime: end,
+            timeZone: 'America/New_York'
+        },
+        description: `updated : ${new Date().toLocaleString()}`
+    }
 
+    return new Promise( async ( resolve, reject ) => {
+        try {
+            calendar.events.insert({
+                calendarId: calendarId,
+                resource:event
+            }, (err) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve();
+                }
+            });
+        } catch (error) {
+            reject(error);
+        }
+    });
 }
 
-function updateEvent ( id ) {
-
+async function updateEvent( id ) {
+    return new Promise( async ( resolve, reject ) => {
+        try {
+            const event = await calendar.events.get ({
+                calendarId: calendarId,
+                eventId: id,
+            });
+    
+            event.data.description = `updated : ${new Date().toLocaleString()}`;
+    
+            calendar.events.update({
+                calendarId: calendarId,
+                eventId: id,
+                resource: event.data,
+            });
+    
+            resolve();
+        } catch ( err ) {
+            console.error( 'Error updating event description:', err );
+            reject( err );
+        }
+    });
 }
 
 async function deleteEvent ( id ) {
     return new Promise( async ( resolve, reject ) => {
-      try {
-        await calendar.events.delete({
-          calendarId: calendarId,
-          eventId: id,
-        });
-        resolve();
-      } catch (err) {
-        console.error('Error deleting event:', err);
-        reject(err);
-      }
+        try {
+            await calendar.events.delete({
+                calendarId: calendarId,
+                eventId: id,
+            });
+            resolve();
+        } catch ( err ) {
+            console.error('Error deleting event:', err);
+            reject( err );
+        }
     });
-  }
-
-
-
-
-
-
-
-
-
-
-
+}
 
 
 function getNewData () {
@@ -94,9 +131,6 @@ function getNewData () {
     } );
 }
 
-
-
-
 function getOldData() {
     return new Promise(async (resolve, reject) => {
         try {
@@ -123,21 +157,27 @@ function updateCalendar ( newData, oldData ) {
     return new Promise(async ( resolve, reject ) => {
         try {
             let iter = 0;
-            for ( let i = 0; i < newData.length; i++ ) {
-                while ( iter < oldData.length && oldData[0][iter] < newData[0][i] ) { // oldData top is above
-                    // delete oldData[2][iter]
+            console.log(newData.length);
+            for ( let i = 0; i < newData[0].length; i++ ) {
+                while ( iter < oldData[0].length && oldData[0][iter] < newData[0][i] ) { // oldData top is above
+                    await deleteEvent(oldData[2][iter]);
+                    console.log("delete-", oldData[0][iter]);
                     iter++;
                 }
-                if ( iter < oldData.length &&
-                     oldData[0][iter] === newData[0][i] && oldData[1][iter] === newData[1][i] ) { // tops are equal
-                        // update oldData[2][iter]
+                if ( iter < oldData[0].length &&
+                     oldData[0][iter] === newData[0][i] && oldData[1][iter] === newData[1][i] ) { // tops and bottoms are equal
+                        await updateEvent(oldData[2][iter]);
+                        console.log("update", oldData[0][iter]);
                         iter++;
                 } else { // newData top is above
-                    // create [newData[0][i], newData[1][i]]
+                    await addEvent(newData[0][i], newData[1][i]);
+                    console.log("add", newData[0][i]);
                 }
             }
-            for ( let i = iter; i < oldData.length; i++ ) {
-                // delete oldData[2][iter]
+            while ( iter < oldData[0].length ) { // remove the leftover
+                await deleteEvent(oldData[2][iter]);
+                console.log("delete", oldData[0][iter]);
+                iter++;
             }
             
             resolve();
@@ -158,17 +198,11 @@ async function main () {
         getNewData(),
         getOldData(),
     ]);
-    
     console.log(newData[0], oldData[0]);
-
-    for (let i = 0; i < newData.length; i++) {
-        //console.log('hi');
-    }
-
-    one = '2023-10-12T10:00:00';
-    two = '2023-10-13T07:00:00';
-    //console.log(one > two);
+    updateCalendar( newData, oldData );
     
+    
+
 }
 
 main();
