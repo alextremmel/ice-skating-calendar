@@ -23,17 +23,28 @@ function getDate( offset ) { // returns date string (offset) days before or afte
     return date;
 }
 
-function addEvent (calendar, times) {
+function addEvent ( start, end ) {
 
 }
 
-function updateEvent (calendar, times) {
+function updateEvent ( id ) {
 
 }
 
-function deleteEvent (calendar, times) {
-
-}
+async function deleteEvent ( id ) {
+    return new Promise( async ( resolve, reject ) => {
+      try {
+        await calendar.events.delete({
+          calendarId: calendarId,
+          eventId: id,
+        });
+        resolve();
+      } catch (err) {
+        console.error('Error deleting event:', err);
+        reject(err);
+      }
+    });
+  }
 
 
 
@@ -125,7 +136,7 @@ function updateCalendar ( newData, oldData ) {
                     // create [newData[0][i], newData[1][i]]
                 }
             }
-            for ( let i = iter; i < oldData.length; i++) {
+            for ( let i = iter; i < oldData.length; i++ ) {
                 // delete oldData[2][iter]
             }
             
