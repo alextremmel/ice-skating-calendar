@@ -6,12 +6,12 @@ const clientEmail = "updater@public-skate-calendar-0.iam.gserviceaccount.com";
 const daysBefore = 40;
 const scriptTimeout = 80000; // 80 seconds
 
-const key = require('./key.json');
+// const key = require('./key.json');
 
 const calendar = google.calendar({ version: 'v3', auth: new google.auth.JWT(
     clientEmail,
     null,
-    key.private_key,
+    process.env.PRIV_KEY,
     ['https://www.googleapis.com/auth/calendar']
 )});
 
