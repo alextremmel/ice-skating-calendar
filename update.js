@@ -4,8 +4,9 @@ const { google } = require('googleapis');
 const calendarId = "n8u997kirjjqku6g6o10nkugp4@group.calendar.google.com";
 const clientEmail = "updater@public-skate-calendar-0.iam.gserviceaccount.com";
 const daysBefore = 10;
+const scriptTimeout = 80000; // 80 seconds
 
-const key = require('./keys.json');
+const key = require('./key.json');
 
 const calendar = google.calendar({ version: 'v3', auth: new google.auth.JWT(
     clientEmail,
@@ -17,10 +18,27 @@ const calendar = google.calendar({ version: 'v3', auth: new google.auth.JWT(
 
 function getDate( offset ) { // returns date string (offset) days before or after current date
     let date = new Date();
-    date.setDate( date.getDate() + offset )
+    date.setDate( date.getDate() + offset + 0)
     date.setHours( 0, 0, 0, 0 );
     date = date.toISOString().substring( 0, 19 ) + "Z";
     return date;
+}
+
+function within(t1, t2) { // returns if two times are within 10 minutes
+    t3 = new Date(t1);
+    t4 = new Date(t2);
+    return (Math.abs(t3.getTime()-t4.getTime()) <= 10*60000)
+}
+
+
+function mergeEvents ( startTimes, endTimes ) {
+    for (let iter = 0; iter < endTimes.length; iter++) {
+        if (within(endTimes[iter], startTimes[iter + 1])) {
+            endTimes.splice(iter, 1);
+            startTimes.splice(iter + 1, 1);
+        }
+    }
+    return ( [ startTimes, endTimes ] )
 }
 
 function addEvent ( start, end ) {
@@ -94,7 +112,6 @@ async function deleteEvent ( id ) {
     });
 }
 
-
 function getNewData () {
     const requestOptions = {
         method: "POST",
@@ -124,7 +141,7 @@ function getNewData () {
             const data = await response.json();
             const startTimes = data.schedule.map((d) => d.start);
             const endTimes = data.schedule.map((d) => d.end);
-            resolve([startTimes, endTimes]);
+            resolve(mergeEvents(startTimes, endTimes));
         } catch (error) {
             reject(error);
         }
@@ -157,31 +174,28 @@ function updateCalendar ( newData, oldData ) {
     return new Promise(async ( resolve, reject ) => {
         try {
             let iter = 0;
-            console.log(newData.length);
             for ( let i = 0; i < newData[0].length; i++ ) {
                 while ( iter < oldData[0].length && oldData[0][iter] < newData[0][i] ) { // oldData top is above
                     await deleteEvent(oldData[2][iter]);
-                    console.log("delete-", oldData[0][iter]);
+                    console.log("deleted-", oldData[0][iter]);
                     iter++;
                 }
                 if ( iter < oldData[0].length &&
                      oldData[0][iter] === newData[0][i] && oldData[1][iter] === newData[1][i] ) { // tops and bottoms are equal
                         await updateEvent(oldData[2][iter]);
-                        console.log("update", oldData[0][iter]);
+                        console.log("updated", oldData[0][iter]);
                         iter++;
                 } else { // newData top is above
                     await addEvent(newData[0][i], newData[1][i]);
-                    console.log("add", newData[0][i]);
+                    console.log("added", newData[0][i]);
                 }
             }
             while ( iter < oldData[0].length ) { // remove the leftover
                 await deleteEvent(oldData[2][iter]);
-                console.log("delete", oldData[0][iter]);
+                console.log("deleted", oldData[0][iter]);
                 iter++;
             }
-            
             resolve();
-            
         } catch (error) {
             reject(error);
         }
@@ -198,15 +212,29 @@ async function main () {
         getNewData(),
         getOldData(),
     ]);
-    console.log(newData[0], oldData[0]);
-    updateCalendar( newData, oldData );
+    //console.log(newData);
     
+    await updateCalendar( newData, oldData );
     
-
 }
 
-main();
 
+const scriptTimeoutPromise = new Promise((_, reject) => {
+    setTimeout(() => {
+        console.error("Script timed out");
+        process.exit(1); // Terminate the script
+    }, scriptTimeout);
+});
+
+Promise.race([main(), scriptTimeoutPromise])
+    .then(() => {
+        console.log("Script completed successfully");
+        process.exit();
+    })
+    .catch((error) => {
+        console.error(error);
+        process.exit(1); // Terminate the script
+    });
 
 
 /*

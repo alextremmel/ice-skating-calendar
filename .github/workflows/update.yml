@@ -23,7 +23,5 @@ jobs:
 
     - name: run script
       env: 
-        CAL_ID: ${{ secrets.CAL_ID }}
-        CL_EMAIL: ${{ secrets.CL_EMAIL }}
         PRIV_KEY: ${{ secrets.PRIV_KEY }}
       run: node update.js

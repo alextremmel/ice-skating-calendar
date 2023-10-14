@@ -1,1 +1,1 @@
-# ice-skating-calendar
+# Public Skate Calendar
