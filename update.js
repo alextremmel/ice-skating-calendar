@@ -1,5 +1,5 @@
 const { google } = require('googleapis');
-//const fetch  = require('node-fetch'); // use this when running on github, package.json needs node-fetch
+const fetch  = require('node-fetch'); // use this when running on github, package.json needs node-fetch
 
 const calendarId = "n8u997kirjjqku6g6o10nkugp4@group.calendar.google.com";
 const clientEmail = "updater@public-skate-calendar-0.iam.gserviceaccount.com";
