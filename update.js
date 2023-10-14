@@ -30,7 +30,7 @@ function within(t1, t2) { // returns if two times are within 10 minutes
     return (Math.abs(t3.getTime()-t4.getTime()) <= 10*60000)
 }
 
-function mergeEvents ( startTimes, endTimes ) {
+function mergeEvents ( [startTimes, endTimes] ) {
     for (let iter = 0; iter < endTimes.length; iter++) {
         if (within(endTimes[iter], startTimes[iter + 1])) {
             endTimes.splice(iter, 1);
@@ -140,7 +140,7 @@ function getNewData () {
             const data = await response.json();
             const startTimes = data.schedule.map((d) => d.start);
             const endTimes = data.schedule.map((d) => d.end);
-            resolve(mergeEvents(startTimes, endTimes));
+            resolve(mergeEvents(mergeEvents([startTimes, endTimes])));
         } catch (error) {
             reject(error);
         }
