@@ -3,7 +3,7 @@ const { google } = require('googleapis');
 
 const calendarId = "n8u997kirjjqku6g6o10nkugp4@group.calendar.google.com";
 const clientEmail = "updater@public-skate-calendar-0.iam.gserviceaccount.com";
-const daysBefore = 10;
+const daysBefore = 40;
 const scriptTimeout = 80000; // 80 seconds
 
 const key = require('./key.json');
@@ -29,7 +29,6 @@ function within(t1, t2) { // returns if two times are within 10 minutes
     t4 = new Date(t2);
     return (Math.abs(t3.getTime()-t4.getTime()) <= 10*60000)
 }
-
 
 function mergeEvents ( startTimes, endTimes ) {
     for (let iter = 0; iter < endTimes.length; iter++) {
@@ -202,9 +201,6 @@ function updateCalendar ( newData, oldData ) {
     }); 
 }
 
-
-
-
 async function main () {
     
     
@@ -217,7 +213,6 @@ async function main () {
     await updateCalendar( newData, oldData );
     
 }
-
 
 const scriptTimeoutPromise = new Promise((_, reject) => {
     setTimeout(() => {
@@ -235,102 +230,3 @@ Promise.race([main(), scriptTimeoutPromise])
         console.error(error);
         process.exit(1); // Terminate the script
     });
-
-
-/*
-
-function addEvent (times) {
-    const event = {
-        summary: 'Public Skate',
-        start: {
-            dateTime: times[0],
-            timeZone: 'America/New_York'
-        },
-        end: {
-            dateTime: times[1],
-            timeZone: 'America/New_York'
-        },
-        description: `Public skate times are subject to change. This event was last updated ${new Date().toLocaleString()}`
-    }
-
-    return new Promise((resolve, reject) => {
-        try {
-            calendar.events.insert({
-                calendarId: process.env.CAL_ID,
-                resource:event
-            }, (err) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve();
-                }
-            });
-        } catch (error) {
-            reject(error);
-        }
-    });
-}
-
-function deleteEvent (id) {
-    return new Promise((resolve, reject) => {
-        try {
-            calendar.events.delete(
-                {
-                    calendarId: process.env.CAL_ID,
-                    eventId: id
-                },
-                (err, res) => {
-                    if (err) {
-                        reject(err);
-                    } else {
-                        resolve();
-                    }
-                }
-            );  
-        } catch (error) {
-            reject(error);
-        }
-    });
-}
-
-
-function updateCalendar (newData, oldData) {
-
-    return new Promise(async (resolve, reject) => {
-        try {
-            
-            for (let i = 0; i < oldData[0].length; i++) {
-                if (!newData.some(item => item[0] === oldData[0][i][0] && item[1] === oldData[0][i][1])) {
-                    await deleteEvent(oldData[1][i]);
-                }
-            }
-            
-            for (let i = 0; i < newData.length; i++) {
-                if (!oldData[0].map(s => [s[0], s[1]]).some(item => item[0] === newData[i][0] && item[1] === newData[i][1])) {
-                    await addEvent(newData[i]);
-                }
-            }
-            
-            resolve();
-            
-        } catch (error) {
-            reject(error);
-        }
-    });  
-}
-
-async function main () {
-    
-    
-    const [newData, oldData] = await Promise.all([
-        getNewData(),
-        getOldData()
-    ]);
-    
-    await updateCalendar(newData, oldData);
-    
-}
-
-// main();
-
-*/
