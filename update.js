@@ -5,6 +5,8 @@ const calendarId = "n8u997kirjjqku6g6o10nkugp4@group.calendar.google.com";
 const clientEmail = "updater@public-skate-calendar-0.iam.gserviceaccount.com";
 const daysBefore = 40;
 const scriptTimeout = 80000; // 80 seconds
+const currentDate = new Date(); // current date/time of script
+date.setHours(date.getHours()-4) // EST timezone from UTC
 
 // const key = require('./key.json');
 
@@ -51,7 +53,7 @@ function addEvent ( start, end ) {
             dateTime: end,
             timeZone: 'America/New_York'
         },
-        description: `updated : ${new Date().toLocaleString()}`
+        description: `Updated : ${currentDate}`
     }
 
     return new Promise( async ( resolve, reject ) => {
@@ -80,7 +82,7 @@ async function updateEvent( id ) {
                 eventId: id,
             });
     
-            event.data.description = `updated : ${new Date().toLocaleString()}`;
+            event.data.description = `updated : ${currentDate}`;
     
             calendar.events.update({
                 calendarId: calendarId,
