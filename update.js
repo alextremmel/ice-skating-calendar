@@ -8,6 +8,7 @@ const scriptTimeout = 80000; // 80 seconds
 const currentDate = new Date(); // current date/time of script
 currentDate.setHours(currentDate.getHours()-4) // EST timezone from UTC
 
+
 // const key = require('./key.json');
 
 const calendar = google.calendar({ version: 'v3', auth: new google.auth.JWT(
@@ -53,7 +54,7 @@ function addEvent ( start, end ) {
             dateTime: end,
             timeZone: 'America/New_York'
         },
-        description: `Updated : ${currentDate}`
+        description: `Updated : ${currentDate.toLocaleString()}`
     }
 
     return new Promise( async ( resolve, reject ) => {
@@ -82,7 +83,7 @@ async function updateEvent( id ) {
                 eventId: id,
             });
     
-            event.data.description = `updated : ${currentDate}`;
+            event.data.description = `updated : ${currentDate.toLocaleString()}`;
     
             calendar.events.update({
                 calendarId: calendarId,
