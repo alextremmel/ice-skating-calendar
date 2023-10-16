@@ -6,7 +6,7 @@ const clientEmail = "updater@public-skate-calendar-0.iam.gserviceaccount.com";
 const daysBefore = 40;
 const scriptTimeout = 80000; // 80 seconds
 const currentDate = new Date(); // current date/time of script
-currentDate.setHours(date.getHours()-4) // EST timezone from UTC
+currentDate.setHours(currentDate.getHours()-4) // EST timezone from UTC
 
 // const key = require('./key.json');
 
